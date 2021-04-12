@@ -1,4 +1,3 @@
-from __future__ import print_function
 from google.oauth2.service_account import Credentials
 import googleapiclient.discovery, json, progress.bar, glob, sys, argparse, time
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -23,7 +22,7 @@ did = args.drive_id
 credentials = glob.glob(args.credentials)
 
 try:
-    open(credentials[0], 'r')
+    open(credentials[0])
     print('>> Found credentials.')
 except IndexError:
     print('>> No credentials found.')
@@ -60,7 +59,7 @@ batch = drive.new_batch_http_request()
 aa = glob.glob('%s/*.json' % acc_dir)
 pbar = progress.bar.Bar("Readying accounts", max=len(aa))
 for i in aa:
-    ce = json.loads(open(i, 'r').read())['client_email']
+    ce = json.loads(open(i).read())['client_email']
     batch.add(drive.permissions().create(fileId=did, supportsAllDrives=True, body={
         "role": "fileOrganizer",
         "type": "user",

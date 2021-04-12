@@ -29,7 +29,7 @@ class MegaAppListener(MegaListener):
         self.__size = 0
         self.error = None
         self.gid = ""
-        super(MegaAppListener, self).__init__()
+        super().__init__()
 
     @property
     def speed(self):
@@ -56,7 +56,7 @@ class MegaAppListener(MegaListener):
         return self.__bytes_transferred
 
     def onRequestStart(self, api, request):
-        LOGGER.info('Request start ({})'.format(request))
+        LOGGER.info(f'Request start ({request})')
 
     def onRequestFinish(self, api, request, error):
         LOGGER.info('Mega Request finished ({}); Result: {}'
