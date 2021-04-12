@@ -1,4 +1,5 @@
 from bot.helper.telegram_helper.message_utils import sendMessage
+from telegram.ext import run_async
 from bot import AUTHORIZED_CHATS, dispatcher
 from telegram.ext import CommandHandler
 from bot.helper.telegram_helper.filters import CustomFilters
@@ -7,6 +8,7 @@ from telegram import Update
 from bot.helper.telegram_helper.bot_commands import BotCommands
 
 
+@run_async
 def authorize(update,context):
     reply_message = update.message.reply_to_message
     msg = ''
@@ -32,6 +34,7 @@ def authorize(update,context):
         sendMessage(msg, context.bot, update)
 
 
+@run_async
 def unauthorize(update,context):
     reply_message = update.message.reply_to_message
     if reply_message is None:
@@ -58,9 +61,9 @@ def unauthorize(update,context):
 
 
 authorize_handler = CommandHandler(command=BotCommands.AuthorizeCommand, callback=authorize,
-                                   filters=CustomFilters.owner_filter & Filters.group, run_async=True)
+                                   filters=CustomFilters.owner_filter & Filters.group)
 unauthorize_handler = CommandHandler(command=BotCommands.UnAuthorizeCommand, callback=unauthorize,
-                                     filters=CustomFilters.owner_filter & Filters.group, run_async=True)
+                                     filters=CustomFilters.owner_filter & Filters.group)
 dispatcher.add_handler(authorize_handler)
 dispatcher.add_handler(unauthorize_handler)
 

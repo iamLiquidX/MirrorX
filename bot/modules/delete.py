@@ -1,4 +1,4 @@
-from telegram.ext import CommandHandler
+from telegram.ext import CommandHandler, run_async
 import threading
 from telegram import Update
 from bot import dispatcher, LOGGER
@@ -7,6 +7,7 @@ from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.mirror_utils.upload_utils import gdriveTools
 
+@run_async
 def deletefile(update, context):
 	msg_args = update.message.text.split(None, 1)
 	msg = ''
@@ -25,5 +26,5 @@ def deletefile(update, context):
 	threading.Thread(target=auto_delete_message, args=(context.bot, update.message, reply_message)).start()
 
 delete_handler = CommandHandler(command=BotCommands.deleteCommand, callback=deletefile,
-									filters=CustomFilters.owner_filter, run_async=True)
+									filters=CustomFilters.owner_filter)
 dispatcher.add_handler(delete_handler)

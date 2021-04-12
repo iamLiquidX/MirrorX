@@ -1,21 +1,14 @@
-<<<<<<< HEAD
 requests
 progress
-=======
-appdirs
-aria2p
-beautifulsoup4
-google-api-python-client
-google-auth-httplib2
-google-auth-oauthlib
-js2py
-lxml
->>>>>>> upstream/master
 psutil
-Pyrogram
-python-dotenv
+python-telegram-bot==12.6.1 
+google-api-python-client>=1.7.11,<1.7.20
+google-auth-httplib2>=0.0.3,<0.1.0
+google-auth-oauthlib>=0.4.1,<0.10.0
+aria2p>=0.9.0,<0.15.0
+python-dotenv>=0.10
+tenacity>=6.0.0
 python-magic
-<<<<<<< HEAD
 beautifulsoup4>=4.8.2,<4.8.10
 Pyrogram==0.18.0
 TgCrypto>=1.1.1,<1.1.10
@@ -26,11 +19,3 @@ telegraph
 appdirs
 speedtest-cli
 messages
-=======
-python-telegram-bot
-requests
-telegraph
-tenacity
-TgCrypto
-youtube_dl
->>>>>>> upstream/master

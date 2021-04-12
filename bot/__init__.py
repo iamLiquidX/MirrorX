@@ -83,7 +83,7 @@ try:
     BOT_TOKEN = getConfig('BOT_TOKEN')
     parent_id = getConfig('GDRIVE_FOLDER_ID')
     DOWNLOAD_DIR = getConfig('DOWNLOAD_DIR')
-    if not DOWNLOAD_DIR.endswith("/"):
+    if DOWNLOAD_DIR[-1] != '/' or DOWNLOAD_DIR[-1] != '\\':
         DOWNLOAD_DIR = DOWNLOAD_DIR + '/'
     DOWNLOAD_STATUS_UPDATE_INTERVAL = int(getConfig('DOWNLOAD_STATUS_UPDATE_INTERVAL'))
     OWNER_ID = int(getConfig('OWNER_ID'))
@@ -95,7 +95,8 @@ except KeyError as e:
     exit(1)
 
 LOGGER.info("Generating USER_SESSION_STRING")
-app = Client(':memory:', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN)
+with Client(':memory:', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN) as app:
+    USER_SESSION_STRING = app.export_session_string()
 
 #Generate Telegraph Token
 sname = ''.join(random.SystemRandom().choices(string.ascii_letters, k=8))
@@ -198,6 +199,6 @@ except KeyError:
     SHORTENER = None
     SHORTENER_API = None
 
-updater = tg.Updater(token=BOT_TOKEN)
+updater = tg.Updater(token=BOT_TOKEN,use_context=True)
 bot = updater.bot
 dispatcher = updater.dispatcher

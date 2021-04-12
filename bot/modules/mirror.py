@@ -1,5 +1,5 @@
 import requests
-from telegram.ext import CommandHandler
+from telegram.ext import CommandHandler, run_async
 from telegram import InlineKeyboardMarkup
 
 from bot import Interval, INDEX_URL, BUTTON_THREE_NAME, BUTTON_THREE_URL, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, BLOCK_MEGA_LINKS
@@ -149,13 +149,8 @@ class MirrorListener(listeners.MirrorListeners):
             msg = f'<b>Filename : </b><code>{download_dict[self.uid].name()}</code>\n<b>Size : </b><code>{size}</code>'
             buttons = button_build.ButtonMaker()
             if SHORTENER is not None and SHORTENER_API is not None:
-<<<<<<< HEAD
                 surl = requests.get('https://{}/api?api={}&url={}&format=text'.format(SHORTENER, SHORTENER_API, link)).text
                 buttons.buildbutton("💾Drive Link💾", surl)
-=======
-                surl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={link}&format=text').text
-                buttons.buildbutton("⚡Drive Link⚡", surl)
->>>>>>> upstream/master
             else:
                 buttons.buildbutton("💾Drive Link💾", link)
             LOGGER.info(f'Done Uploading {download_dict[self.uid].name()}')
@@ -164,13 +159,8 @@ class MirrorListener(listeners.MirrorListeners):
                 if os.path.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}'):
                     share_url += '/'
                 if SHORTENER is not None and SHORTENER_API is not None:
-<<<<<<< HEAD
                     siurl = requests.get('https://{}/api?api={}&url={}&format=text'.format(SHORTENER, SHORTENER_API, share_url)).text
                     buttons.buildbutton("🚀Index Link🚀", siurl)
-=======
-                    siurl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={share_url}&format=text').text
-                    buttons.buildbutton("💥Index Link💥", siurl)
->>>>>>> upstream/master
                 else:
                     buttons.buildbutton("🚀Index Link🚀", share_url)
             if BUTTON_THREE_NAME is not None and BUTTON_THREE_URL is not None:
@@ -282,24 +272,27 @@ def _mirror(bot, update, isTar=False, extract=False):
         Interval.append(setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages))
 
 
+@run_async
 def mirror(update, context):
     _mirror(context.bot, update)
 
 
+@run_async
 def tar_mirror(update, context):
     _mirror(context.bot, update, True)
 
 
+@run_async
 def unzip_mirror(update, context):
     _mirror(context.bot, update, extract=True)
 
 
 mirror_handler = CommandHandler(BotCommands.MirrorCommand, mirror,
-                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+                                filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
 tar_mirror_handler = CommandHandler(BotCommands.TarMirrorCommand, tar_mirror,
-                                    filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+                                    filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
 unzip_mirror_handler = CommandHandler(BotCommands.UnzipMirrorCommand, unzip_mirror,
-                                      filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+                                      filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
 dispatcher.add_handler(mirror_handler)
 dispatcher.add_handler(tar_mirror_handler)
 dispatcher.add_handler(unzip_mirror_handler)
