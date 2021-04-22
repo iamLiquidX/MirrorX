@@ -24,7 +24,7 @@ RUN mv extract /usr/local/bin && \
     wget -q https://github.com/P3TERX/aria2.conf/raw/master/dht.dat -O /app/dht.dat && \
     wget -q https://github.com/P3TERX/aria2.conf/raw/master/dht6.dat -O /app/dht6.dat && \
     mkdir -p /root/ && \
-    netrc /root/.netrc && \
+    mv netrc /root/.netrc && \
     pip3 install --no-cache-dir -r requirements.txt
 
 CMD ["bash","start.sh"]
