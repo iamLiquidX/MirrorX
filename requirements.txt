@@ -15,7 +15,7 @@ beautifulsoup4
 Pyrogram
 TgCrypto
 psycopg2-binary
-git+https://github.com/yt-dlp/yt-dlp
+yt-dlp
 lxml
 telegraph
 speedtest-cli
