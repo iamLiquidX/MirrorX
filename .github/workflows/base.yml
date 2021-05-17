@@ -1,0 +1,23 @@
+name: MirrorX Base image
+
+on: workflow_dispatch
+
+env:
+  IMAGE: ghcr.io/iamliquidx/mirrorx
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: Login to ghcr.io Registry
+        run: docker login https://ghcr.io -u token -p ${{ secrets.GH_TOKEN }}
+        
+      - name: Build and Push Docker image
+        run: |
+          echo "Building"
+          docker build . -f Dockerfile.base -t ${{ env.IMAGE }}:latest
+          echo "Pushing"
+          docker push ${{ env.IMAGE }}:latest
