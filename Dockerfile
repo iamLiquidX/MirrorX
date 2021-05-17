@@ -1,4 +1,4 @@
-# Base deps
+# Base Image
 FROM ghcr.io/iamliquidx/mirrorx
 
 # Home Dir
