@@ -13,7 +13,7 @@ RUN mv extract /usr/local/bin && \
     wget -q https://github.com/P3TERX/aria2.conf/raw/master/dht.dat -O /app/dht.dat && \
     wget -q https://github.com/P3TERX/aria2.conf/raw/master/dht6.dat -O /app/dht6.dat && \
     ###Rename and set Permission for netrc
-    mv netrc /app/.netrc && chmod 600 /app/netrc && \
+    mv netrc /app/.netrc && chmod 600 /app/.netrc && \
     pip3 -q install --no-cache-dir -r requirements.txt
 
 # Script Which Starts the Bot
