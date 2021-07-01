@@ -14,7 +14,6 @@ python-magic
 beautifulsoup4
 Pyrogram
 TgCrypto
-psycopg2-binary
 yt-dlp
 lxml
 telegraph
@@ -22,3 +21,4 @@ speedtest-cli
 messages
 pybase64
 lk21
+megasdkrestclient

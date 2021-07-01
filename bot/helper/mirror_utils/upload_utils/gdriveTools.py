@@ -767,7 +767,7 @@ class GoogleDriveHelper:
     def download_file(self, file_id, path, filename, mime_type):
         request = self.__service.files().get_media(fileId=file_id)
         fh = io.FileIO('{}{}'.format(path, filename), 'wb')
-        downloader = MediaIoBaseDownload(fh, request, chunksize = 100 * 1024 * 1024)
+        downloader = MediaIoBaseDownload(fh, request, chunksize = 65 * 1024 * 1024)
         done = False
         while done is False:
             if self.is_cancelled:
