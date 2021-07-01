@@ -1,0 +1,56 @@
+name: MirrorX Base image
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+
+jobs:
+  BuildARM64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with: 
+          platforms: arm64
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: token
+          password: ${{ secrets.GH_TOKEN }}
+      - name: Docker meta
+        id: metaraw
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/iamliquidx/mirrorx
+          tags: |
+            type=semver,pattern={{version}}
+      - name: Build and push LTS RAW
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64, linux/arm64/v8
+          push: true
+          tags: ${{ steps.metaraw.outputs.tags }}
+          labels: ${{ steps.metaraw.outputs.labels }}
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: Login to ghcr.io Registry
+        run: docker login https://ghcr.io -u token -p ${{ secrets.GH_TOKEN }}
+        
+      - name: Build and Push Docker image
+        run: |
+          echo "Building"
+          docker build . -f Dockerfile.base -t ${{ env.IMAGE }}:latest
+          echo "Pushing"
+          docker push ${{ env.IMAGE }}:latest

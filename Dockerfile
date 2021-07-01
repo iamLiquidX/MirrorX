@@ -3,7 +3,7 @@ FROM python:slim
 ARG CPU_ARCH="amd64"
 ENV HOST_CPU_ARCH=$CPU_ARCH
 
-WORKDIR /
+WORKDIR /app/
 # Deps
 RUN sed -i 's/main/main non-free/g' /etc/apt/sources.list && \
     apt-get -qq update && \
@@ -14,9 +14,6 @@ RUN sed -i 's/main/main non-free/g' /etc/apt/sources.list && \
     mv ff*/ff* /usr/local/bin/ && rm -rf ff* && \
     wget -q https://github.com/viswanathbalusu/megasdkrest/releases/download/v0.1.0/megasdkrest-${HOST_CPU_ARCH} -O /usr/local/bin/megasdkrest && \
     chmod a+x /usr/local/bin/megasdkrest
-
-# Home Dir
-WORKDIR /app/
 
 # Mirror Bot files and requirements
 COPY . .
