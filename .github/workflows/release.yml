@@ -5,7 +5,6 @@ on:
     tags:
       - "v*.*.*"
 
-
 jobs:
   BuildWheel:
     runs-on: ubuntu-latest
@@ -15,6 +14,9 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.9.6
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Install deps fro Pypi Release
         run: |
           pip -q install setuptools wheel twine
@@ -26,6 +28,14 @@ jobs:
         run: |
           python setup.py sdist bdist_wheel
           twine upload dist/*
+      - name: Upload all the data files to github Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: MirrorX Release ${{ steps.get_version.outputs.VERSION }}
+          files: |
+            dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Sleep
         run: sleep 60
       - name: Set up QEMU

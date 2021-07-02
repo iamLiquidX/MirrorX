@@ -10,9 +10,12 @@ services:
     volumes:
         # Make a folder in the host OS and keep SA(accounts folder) or token there
         # syntax "host OS path":"where it should be mounted inside container" 
-        - /your/folder/path:/app
-        # ex: /home/someuser/mirrorx:/app
-        # Dont edit the Container Directory (i.e /app) as the bot runs in the same directory
+        - /home/someuser/mirrorx/accounts:/app/accounts
+        # for Service Accounts ex: /home/someuser/mirrorx/accounts:/app/accounts 
+        # for token and credential.json
+        # - /home/someuser/mirrorx/token.pickle:/app/token.pickle
+        # - /home/someuser/mirrorx/credential.json:/app/credentials.json
+        # Dont edit the Container Directory (i.e Right Side one) as the bot runs in the same directory
 
     restart: unless-stopped
     # Restart policy, if container exits due to some error it will restart again
