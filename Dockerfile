@@ -17,17 +17,8 @@ RUN if [ "$(uname -m)" = "aarch64" ] ; then \
     wget -q https://github.com/viswanathbalusu/megasdkrest/releases/download/v0.1.0/megasdkrest-${HOST_CPU_ARCH} -O /usr/local/bin/megasdkrest && \
     chmod a+x /usr/local/bin/megasdkrest
 
-Mirror Bot files and requirements
-COPY . .
-RUN mv extract /usr/local/bin && \
-    mv pextract /usr/local/bin && \
-    chmod +x /usr/local/bin/extract && \
-    chmod +x /usr/local/bin/pextract && \
-    wget -q https://github.com/P3TERX/aria2.conf/raw/master/dht.dat -O /app/dht.dat && \
-    wget -q https://github.com/P3TERX/aria2.conf/raw/master/dht6.dat -O /app/dht6.dat && \
-    mkdir -p /root/ && \
-    mv netrc /root/.netrc && \
-    pip3 -q install --no-cache-dir -r requirements.txt
+
+# RUN pip3 -q install --no-cache-dir -r requirements.txt
 
 # Script Which Starts the Bot
-CMD ["bash", "start.sh"]
+CMD ["MirrorX"]

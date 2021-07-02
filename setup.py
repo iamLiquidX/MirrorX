@@ -56,7 +56,7 @@ setup(
     python_requires=">=3.7",
     entry_points={
         "console_scripts":[
-            "Mirrorx = bot.__main__:main"
+            "MirrorX = bot.__main__:main"
         ]
 
     },
