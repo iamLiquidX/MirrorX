@@ -1,4 +1,4 @@
-name: MirrorX Base image
+name: MirrorX Release
 
 on:
   push:
@@ -7,10 +7,27 @@ on:
 
 
 jobs:
-  BuildContainer:
+  BuildWheel:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9.6
+      - name: Install deps fro Pypi Release
+        run: |
+          pip -q install setuptools wheel twine
+          pip -q install -r requirements.txt
+      - name: Publish to pypi
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
+      - name: Sleep
+        run: sleep 60
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with: 

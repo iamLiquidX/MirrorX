@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  mirrorx:
+    image: ghcr.io/iamliquidx/mirrorx:latest
+    container_name: mirrorx
+    env_file:
+        # Should be filled up and should be kept in the same directory
+        - config.env
+    volumes:
+        # Make a folder in the host OS and keep SA(accounts folder) or token there
+        # syntax "host OS path":"where it should be mounted inside container" 
+        - /your/folder/path:/app
+        # ex: /home/someuser/mirrorx:/app
+        # Dont edit the Container Directory (i.e /app) as the bot runs in the same directory
+
+    restart: unless-stopped
+    # Restart policy, if container exits due to some error it will restart again

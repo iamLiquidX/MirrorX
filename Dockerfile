@@ -1,6 +1,6 @@
 FROM python:slim
 
-WORKDIR /app/
+WORKDIR /
 # Deps
 RUN if [ "$(uname -m)" = "aarch64" ] ; then \
         export HOST_CPU_ARCH=arm64; \
@@ -15,10 +15,12 @@ RUN if [ "$(uname -m)" = "aarch64" ] ; then \
     tar -xf ff*.tar.xz && rm -rf *.tar.xz && \
     mv ff*/ff* /usr/local/bin/ && rm -rf ff* && \
     wget -q https://github.com/viswanathbalusu/megasdkrest/releases/download/v0.1.0/megasdkrest-${HOST_CPU_ARCH} -O /usr/local/bin/megasdkrest && \
-    chmod a+x /usr/local/bin/megasdkrest
+    chmod a+x /usr/local/bin/megasdkrest && mkdir /app/ && chmod 777 /app/
 
+RUN pip3 install --no-cache-dir https://github.com/nenokkadine/MirrorX/archive/refs/heads/megarest.zip
 
-# RUN pip3 -q install --no-cache-dir -r requirements.txt
+WORKDIR /app
 
-# Script Which Starts the Bot
-CMD ["MirrorX"]
+# CMD ["MirrorX"]
+CMD pwd && ls && cd accounts && ls -lh
+

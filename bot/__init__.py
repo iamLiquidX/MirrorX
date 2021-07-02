@@ -78,6 +78,7 @@ except OSError:
     LOGGER.error("Aria2c Binary might have got damaged, Please Check and reinstall..")
     sys.exit(0)
 time.sleep(1)
+
 aria2 = aria2p.API(
     aria2p.Client(
         host="http://localhost",

@@ -20,6 +20,8 @@ def list_drive(update,context):
 
     except IndexError:
         sendMessage('send a search key along with command', context.bot, update)
+    except AttributeError:
+        pass
 
 
 list_handler = CommandHandler(BotCommands.ListCommand, list_drive,filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
