@@ -60,5 +60,8 @@ setup(
         ]
 
     },
+    package_data={
+        "": ["data/*.dat", "data/aria.conf"],
+    },
     scripts=['bin/extract', 'bin/pextract'],
 )

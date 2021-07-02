@@ -1,5 +1,5 @@
 import sys
-from bot import aria2, LOGGER, DOWNLOAD_DIR
+from bot import aria2, LOGGER, DOWNLOAD_DIR, ARIA_CHILD_PROC, MEGA_CHILD_PROC
 import shutil
 import os
 import pathlib
@@ -33,9 +33,13 @@ def exit_clean_up(signal, frame):
     try:
         LOGGER.info("Please wait, while we clean up the downloads and stop running downloads")
         clean_all()
+        ARIA_CHILD_PROC.kill()
+        MEGA_CHILD_PROC.kill()
         sys.exit(0)
     except KeyboardInterrupt:
         LOGGER.warning("Force Exiting before the cleanup finishes!")
+        ARIA_CHILD_PROC.kill()
+        MEGA_CHILD_PROC.kill()
         sys.exit(1)
 
 

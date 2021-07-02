@@ -5,8 +5,12 @@ import time
 import random
 import string
 import subprocess
+import pkgutil
+import pathlib
+import sys
 
 import aria2p
+import requests
 import telegram.ext as tg
 from dotenv import load_dotenv
 from pyrogram import Client
@@ -45,7 +49,35 @@ try:
         exit()
 except KeyError:
     pass
+CWD = os.getcwd()
+ariaconfig = pkgutil.get_data("bot", "data/aria.conf").decode()
+dhtfile = pkgutil.get_data("bot", "data/dht.dat")
+dht6file = pkgutil.get_data("bot", "data/dht6.dat")
+with open("dht.dat", "wb+") as dht:
+    dht.write(dhtfile)
+with open("dht6.dat", "wb+") as dht6:
+    dht6.write(dhtfile)
+ariaconfig = ariaconfig.replace("/currentwd", str(CWD))
+try:
+    max_dl = getConfig("MAX_CONCURRENT_DOWNLOADS")
+except KeyError:
+    max_dl = "4"
+tracker_list = requests.get("https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all_aria2.txt").text
+ariaconfig += f"\nmax-concurrent-downloads={max_dl}\nbt-tracker={tracker_list}"
 
+with open("aria.conf", "w+") as ariaconf:
+    ariaconf.write(ariaconfig)
+
+ARIA_CHILD_PROC = None
+try:
+    ARIA_CHILD_PROC = subprocess.Popen(["aria2c", f"--conf-path={CWD}/aria.conf"])
+except FileNotFoundError:
+    LOGGER.error("Please install Aria2c, Exiting..")
+    sys.exit(0)
+except OSError:
+    LOGGER.error("Aria2c Binary might have got damaged, Please Check and reinstall..")
+    sys.exit(0)
+time.sleep(1)
 aria2 = aria2p.API(
     aria2p.Client(
         host="http://localhost",
@@ -87,6 +119,8 @@ try:
     DOWNLOAD_DIR = getConfig('DOWNLOAD_DIR')
     if not DOWNLOAD_DIR.endswith("/"):
         DOWNLOAD_DIR = DOWNLOAD_DIR + '/'
+    if not os.path.exists(DOWNLOAD_DIR):
+        os.makedirs(DOWNLOAD_DIR, 0o777)
     DOWNLOAD_STATUS_UPDATE_INTERVAL = int(getConfig('DOWNLOAD_STATUS_UPDATE_INTERVAL'))
     OWNER_ID = int(getConfig('OWNER_ID'))
     AUTO_DELETE_MESSAGE_DURATION = int(getConfig('AUTO_DELETE_MESSAGE_DURATION'))
@@ -94,7 +128,8 @@ try:
     TELEGRAM_HASH = getConfig('TELEGRAM_HASH')
 except KeyError as e:
     LOGGER.error("One or more env variables missing! Exiting now")
-    exit(1)
+    sys.exit()
+    # exit()
 
 LOGGER.info("Generating USER_SESSION_STRING")
 app = Client(':memory:', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN)
@@ -118,8 +153,16 @@ try:
 except KeyError:
     MEGA_KEY = None
     LOGGER.info('MEGA API KEY NOT AVAILABLE')
+MEGA_CHILD_PROC = None
 if MEGA_KEY is not None:
-    subprocess.Popen(["megasdkrest", "--apikey", MEGA_KEY])
+    try:
+        MEGA_CHILD_PROC = subprocess.Popen(["megasdkrest", "--apikey", MEGA_KEY])
+    except FileNotFoundError:
+        LOGGER.error("Please install Megasdkrest Binary, Exiting..")
+        sys.exit(0)
+    except OSError:
+        LOGGER.error("Megasdkrest Binary might have got damaged, Please Check ..")
+        sys.exit(0)
     time.sleep(3)
     mega_client = MegaSdkRestClient('http://localhost:6090')
     try:
